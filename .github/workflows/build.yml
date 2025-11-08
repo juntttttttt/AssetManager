@@ -41,7 +41,7 @@ jobs:
         run: npx vite build
 
       - name: Build Windows executable (no publish)
-        run: npm run build:win -- --publish never
+        run: npm run build:win:no-publish
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
