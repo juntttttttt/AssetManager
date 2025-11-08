@@ -1,5 +1,33 @@
 # Quick Auto-Update Guide
 
+## 🔒 Public vs Private Repository
+
+**Important Decision:**
+
+- **Public Repository** (Recommended for Auto-Updates):
+  - ✅ Users can download updates without authentication
+  - ✅ Auto-updates work seamlessly for all users
+  - ✅ No extra setup needed
+  - ⚠️ Code is publicly visible (but protected by license - see below)
+
+- **Private Repository**:
+  - ⚠️ Users **cannot** download updates automatically (requires authentication)
+  - ⚠️ Auto-update feature won't work for end users
+  - ✅ Code stays completely private
+  - 💡 **Solution**: Use a public repo with a proprietary license to protect your code
+
+**Recommendation**: 
+- Use a **public repository** with a **proprietary/UNLICENSED license** to:
+  - ✅ Enable auto-updates for your users
+  - ✅ Protect your code from unauthorized use (license prevents copying/modifying)
+  - ✅ Keep source visible but legally protected
+
+**Protecting Your Code:**
+- Your `package.json` should have `"license": "UNLICENSED"` and `"private": true`
+- Include a `LICENSE` file stating "All Rights Reserved"
+- This legally protects your code even though it's publicly visible
+- People can see the code but cannot legally use, copy, or modify it
+
 ## 🚀 Quick Setup (3 Steps)
 
 ### 1. Update `package.json`
@@ -56,6 +84,8 @@ git push -u origin master
 
 **Note**: 
 - If you haven't created a GitHub repository yet, create one at https://github.com/new
+- **Choose "Public"** if you want auto-updates to work for your users
+- **Choose "Private"** only if you don't need auto-updates for end users (they won't be able to download updates)
 - Make sure to replace `YOUR_USERNAME` and `YOUR_REPO_NAME` with your actual GitHub username and repository name
 - If you get authentication errors, you may need to set up a Personal Access Token or SSH keys
 

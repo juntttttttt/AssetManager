@@ -15,6 +15,12 @@ build/*.png
 .env
 .env.local
 
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+server/database.db
+
 # IDE
 .vscode/
 .idea/
