@@ -1,7 +1,7 @@
 # Dependencies
 node_modules/
-package-lock.json
-yarn.lock
+# package-lock.json - Keep this committed for CI/CD (npm ci requires it)
+# yarn.lock - Keep this committed if using yarn
 
 # Build outputs
 dist/
