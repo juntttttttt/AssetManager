@@ -77,9 +77,7 @@ git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 git remote -v
 
 # Push to GitHub
-git push -u origin master
-# Or if using 'main' branch:
-# git push -u origin main
+git push -u origin main
 ```
 
 **Note**: 
@@ -87,7 +85,40 @@ git push -u origin master
 - **Choose "Public"** if you want auto-updates to work for your users
 - **Choose "Private"** only if you don't need auto-updates for end users (they won't be able to download updates)
 - Make sure to replace `YOUR_USERNAME` and `YOUR_REPO_NAME` with your actual GitHub username and repository name
-- If you get authentication errors, you may need to set up a Personal Access Token or SSH keys
+
+### Authentication Issues
+
+If you get a **403 Permission Denied** error when pushing:
+
+**Option 1: Use Personal Access Token (Recommended)**
+1. Go to GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
+2. Click "Generate new token (classic)"
+3. Give it a name (e.g., "Git Push")
+4. Select scope: `repo` (Full control of private repositories)
+5. Click "Generate token" and copy it
+6. When Git asks for password, paste the token instead of your password
+
+**Option 2: Update Git Credentials**
+```bash
+# Clear cached credentials
+git credential-manager erase
+# Or on Windows:
+git credential-manager-core erase
+
+# Or manually edit credentials:
+# Windows: Control Panel → Credential Manager → Windows Credentials → Remove GitHub entries
+```
+
+**Option 3: Use SSH (Alternative)**
+```bash
+# Generate SSH key (if you don't have one)
+ssh-keygen -t ed25519 -C "your_email@example.com"
+
+# Add SSH key to GitHub: Settings → SSH and GPG keys → New SSH key
+
+# Change remote to SSH:
+git remote set-url origin git@github.com:juntttttttt/AssetManager.git
+```
 
 ### 4. Create a Release
 
