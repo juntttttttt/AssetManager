@@ -1,0 +1,254 @@
+{
+  "publishApi": {
+    "baseUrl": "https://publish.roblox.com/v1",
+    "endpoints": {
+      "audio": {
+        "path": "/v1/audio",
+        "method": "POST",
+        "contentType": "application/json",
+        "description": "Publishes an audio file and returns the new asset info",
+        "authentication": {
+          "type": "Cookie",
+          "header": "Cookie: .ROBLOSECURITY=<cookie>",
+          "csrf": {
+            "required": true,
+            "header": "X-CSRF-TOKEN",
+            "obtainFrom": "POST https://auth.roblox.com/v2/logout"
+          }
+        },
+        "requestBody": {
+          "type": "object",
+          "required": ["name", "file"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name of the audio asset",
+              "required": true
+            },
+            "file": {
+              "type": "string",
+              "description": "Base64-encoded audio file content",
+              "required": true,
+              "format": "base64",
+              "note": "Pure base64 string, no data URI prefix"
+            },
+            "groupId": {
+              "type": "integer",
+              "description": "Group ID if uploading to a group",
+              "required": false
+            },
+            "paymentSource": {
+              "type": "string",
+              "description": "Payment source for the upload",
+              "required": false
+            },
+            "estimatedFileSize": {
+              "type": "integer",
+              "description": "Estimated file size in bytes",
+              "required": false
+            },
+            "estimatedDuration": {
+              "type": "integer",
+              "description": "Estimated duration in seconds",
+              "required": false
+            },
+            "assetPrivacy": {
+              "type": "integer",
+              "description": "Asset privacy setting",
+              "required": false,
+              "default": 1
+            }
+          },
+          "example": {
+            "name": "My Audio",
+            "file": "<base64-encoded-file-content>",
+            "estimatedFileSize": 93180
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "Id": {
+                "type": "integer",
+                "description": "Asset ID (note: capital I)"
+              },
+              "Name": {
+                "type": "string",
+                "description": "Asset name (note: capital N)"
+              }
+            },
+            "example": {
+              "Id": 123456789,
+              "Name": "My Audio"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "errorCodes": {
+              "3": "The request did not contain a file to be uploaded.",
+              "4": "The file in the request is too large.",
+              "5": "The duration of the audio file is too long.",
+              "8": "The file type is not supported.",
+              "9": "The file is corrupted",
+              "11": "Missing permissions to spend group funds.",
+              "14": "The user/group does not have sufficient funds to publish.",
+              "15": "The audio file has already been reviewed and rejected.",
+              "18": "Too many requests. Try again later.",
+              "20": "Error while trying to purchase the product.",
+              "22": "The file size estimation error was greater than the acceptable margin of error.",
+              "23": "The duration estimation error was greater than the acceptable margin of error.",
+              "24": "Asset privacy is invalid.",
+              "29": "Invalid argument in the request."
+            },
+            "format": {
+              "errors": [
+                {
+                  "code": 3,
+                  "message": "The request did not contain a file to be uploaded."
+                }
+              ]
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "errorCodes": {
+              "0": "Authorization has been denied for this request.",
+              "1": "The request did not include an authorization."
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "errorCodes": {
+              "0": "Token Validation Failed"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "errorCodes": {
+              "7": "Failed to parse the file.",
+              "19": "Asset creation was unavailable. Please try again."
+            }
+          }
+        }
+      },
+      "images": {
+        "path": "/v1/images",
+        "method": "POST",
+        "contentType": "application/json",
+        "description": "Publishes an image file (decal) and returns the new asset info",
+        "note": "Similar structure to audio endpoint"
+      }
+    },
+    "importantNotes": {
+      "fileEncoding": "The 'file' field must be a pure base64 string. Do NOT include data URI prefix (e.g., 'data:audio/mpeg;base64,'). Just the base64 content.",
+      "responseFormat": "The response uses capital letters: 'Id' not 'id', 'Name' not 'name'",
+      "csrfToken": "CSRF token is required. Obtain it by making a POST request to https://auth.roblox.com/v2/logout with the cookie.",
+      "groupId": "Must be an integer, not a string. Parse with parseInt() before sending.",
+      "userId": "For user uploads, do NOT include userId in the payload. The API uses the authenticated user from the cookie.",
+      "contentType": "Must be 'application/json', NOT 'multipart/form-data'"
+    },
+    "exampleRequest": {
+      "headers": {
+        "Cookie": ".ROBLOSECURITY=<your-cookie>",
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": "<csrf-token>"
+      },
+      "body": {
+        "name": "MyAudioFile",
+        "file": "UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA=",
+        "estimatedFileSize": 93180
+      }
+    },
+    "exampleResponse": {
+      "success": {
+        "Id": 123456789,
+        "Name": "MyAudioFile"
+      },
+      "error": {
+        "errors": [
+          {
+            "code": 3,
+            "message": "The request did not contain a file to be uploaded."
+          }
+        ]
+      }
+    }
+  },
+  "alternativeEndpoints": {
+    "dataRoblox": {
+      "url": "https://data.roblox.com/Data/Upload.ashx",
+      "method": "POST",
+      "contentType": "multipart/form-data",
+      "parameters": {
+        "assetTypeId": {
+          "audio": 3,
+          "decal": 13
+        },
+        "name": "Query parameter or form field",
+        "userId": "Query parameter or form field (for user uploads)",
+        "groupId": "Query parameter or form field (for group uploads)"
+      },
+      "note": "Legacy endpoint, may have CORS issues in browser"
+    }
+  },
+  "implementationChecklist": [
+    "✓ Convert file buffer to base64 (no data URI prefix)",
+    "✓ Set Content-Type to application/json",
+    "✓ Include CSRF token in X-CSRF-TOKEN header",
+    "✓ Include cookie in Cookie header",
+    "✓ Send name and file in JSON body",
+    "✓ Parse groupId as integer if provided",
+    "✓ Do NOT include userId for user uploads",
+    "✓ Check response.data.Id (capital I) for success",
+    "✓ Handle errors array in 400 responses"
+  ],
+  "assetDeliveryApi": {
+    "version": "v2",
+    "baseUrl": "https://assetdelivery.roblox.com/v2",
+    "documentation": "https://create.roblox.com/docs/cloud/legacy/assetdelivery/v2",
+    "endpoint": {
+      "path": "/v2/assetId/{assetId}",
+      "method": "GET",
+      "description": "Retrieves asset content as a binary blob. Used to verify asset existence and accessibility.",
+      "authentication": {
+        "type": "Cookie",
+        "header": "Cookie: .ROBLOSECURITY=<cookie>",
+        "required": false,
+        "note": "Cookie is optional but recommended for private assets"
+      },
+      "responses": {
+        "200": {
+          "description": "Asset exists and is accessible. Returns binary blob of asset content.",
+          "status": "accepted",
+          "note": "If you can fetch the asset, it means it's been accepted and is accessible"
+        },
+        "403": {
+          "description": "Asset exists but user doesn't have permission to access it.",
+          "status": "pending",
+          "note": "Asset might be pending review or private"
+        },
+        "404": {
+          "description": "Asset doesn't exist or has been declined.",
+          "status": "declined",
+          "note": "Asset was either declined or never created"
+        }
+      },
+      "usage": {
+        "purpose": "Check if asset exists and is accessible after upload",
+        "advantages": [
+          "Most reliable method to verify asset status",
+          "Direct API endpoint (no HTML parsing needed)",
+          "Clear status codes (200 = accepted, 403 = pending, 404 = declined)"
+        ],
+        "limitations": [
+          "Does not return asset metadata (name, etc.)",
+          "Only returns binary blob of asset content",
+          "May require cookie for private assets"
+        ],
+        "implementation": "Use as first method in checkAssetStatus, fall back to other methods for asset name/metadata"
+      }
+    }
+  }
+}
+

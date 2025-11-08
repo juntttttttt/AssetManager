@@ -1,0 +1,49 @@
+# Electron Builder Configuration
+# This file provides additional configuration for electron-builder
+# The main config is in package.json, but this can be used for overrides
+
+appId: com.roblox.uploader
+productName: Roblox Mass Uploader
+
+directories:
+  output: release
+
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - package.json
+  - node_modules/**/*
+  - !node_modules/**/*.{md,ts,map}
+  - !node_modules/.cache
+  - !node_modules/.bin
+
+extraFiles:
+  - from: server/dist
+    to: server
+    filter:
+      - "**/*"
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+  artifactName: "${productName}-${version}-${arch}.${ext}"
+  requestedExecutionLevel: asInvoker
+  # Icon is optional - if build/icon.ico exists, it will be used
+  # Otherwise, electron-builder will use default icons
+  icon: build/icon.ico
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Roblox Mass Uploader
+
+portable:
+  artifactName: "${productName}-${version}-portable.${ext}"
+
