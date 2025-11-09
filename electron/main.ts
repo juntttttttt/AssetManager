@@ -143,7 +143,7 @@ function setupAutoUpdater() {
 }
 
 // IPC handlers for manual update checks
-ipcMain.handle('check-for-updates', async () => {
+ipcMain.handle('check-for-updates', async (event) => {
   if (!app.isPackaged) {
     return { success: false, error: 'Auto-updater is disabled in development mode' }
   }
@@ -156,7 +156,7 @@ ipcMain.handle('check-for-updates', async () => {
   }
 })
 
-ipcMain.handle('download-update', async () => {
+ipcMain.handle('download-update', async (event) => {
   if (!app.isPackaged) {
     return { success: false, error: 'Auto-updater is disabled in development mode' }
   }
@@ -169,7 +169,7 @@ ipcMain.handle('download-update', async () => {
   }
 })
 
-ipcMain.handle('install-update', async () => {
+ipcMain.handle('install-update', async (event) => {
   if (!app.isPackaged) {
     return { success: false, error: 'Auto-updater is disabled in development mode' }
   }
